@@ -6,38 +6,40 @@ import javax.swing.JOptionPane;
 
 public class Hospital {
 
+    public static Medico activeUser;
+
     public static void main(String[] args) {
 
-      
-        for (int i = 0; i < 3 ; i++) {
-            
-        String user = JOptionPane.showInputDialog("Ingrese el nombre de usuario");
-        String password = JOptionPane.showInputDialog("Ingrese la contraseña");
-        boolean autenticado = Login.iniciarSesion(user, password);
-        
-        if (autenticado) {
-            menu();
-            
-        } else 
+        for (int i = 0; i < 3; i++) {
 
-            JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
-            
-        
+            String user = JOptionPane.showInputDialog("Ingrese el nombre de usuario");
+            String password = JOptionPane.showInputDialog("Ingrese la contraseña");
+            boolean autenticado = Login.iniciarSesion(user, password);
+
+            if (autenticado) {
+                activeUser = Login.getActiveUser();
+                menu();
+                break;
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
+            }
+
         }
     }
- 
+
     //Metodo para mostrar el menu
     public static void menu() {
         int opcionMenu1;
         do {
             opcionMenu1 = Integer.parseInt(JOptionPane.showInputDialog(
-                    "Elija el numero segun lo que desea hacer: \n "
-                    + "1. Crear paciente\n "
-                    + "2. Actualizar paciente\n "
-                    + "3. Eliminar paciente\n "
-                    + "4. Consultar registro\n "
+                    "Elija el numero segun lo que desea hacer: \n"
+                    + "1. Crear paciente\n"
+                    + "2. Actualizar paciente\n"
+                    + "3. Eliminar paciente\n"
+                    + "4. Consultar registro\n"
                     + "5. Funciones administrativas\n"
-                    + "6. Salir \n"
+                    + "6. Salir\n"
                     + "Que desea hacer?:"
             ));
 
@@ -83,10 +85,17 @@ public class Hospital {
                                 + "Apellidos: " + pacienteConsultado.getApellidos() + "\n"
                                 + "Sexo: " + pacienteConsultado.getSexo() + "\n"
                                 + "Edad: " + pacienteConsultado.getEdad());
-
                     }
                     break;
                 case 5:
+                    if (activeUser.isAdministrador()) {
+
+                        menuAdmin();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Usted no tiene permiso para entrar al menu de funciones administrativas", "Acceso denegado", JOptionPane.ERROR_MESSAGE);
+
+                    }
+
                     break;
                 case 6:
 
@@ -96,6 +105,33 @@ public class Hospital {
 
             }
         } while (opcionMenu1 != 6); // Salir del bucle cuando el usuario elija la opción "Salir"
+
+    }
+
+    public static void menuAdmin() {
+        int opcion;
+        do {
+            opcion = Integer.parseInt(JOptionPane.showInputDialog("Elija el numero segun lo que desea hacer: \n"
+                    + "1. Crear Medico\n"
+                    + "2. Actualizar Medico\n"
+                    + "3. Eliminar Medico\n"
+                    + "4. Consultar registro de Medico\n"
+                    + "5. Otorgar permisos administrativos a un Medico\n"
+                    + "6. Salir\n"
+                    + "Que desea hacer?:"
+            ));
+            switch (opcion) {
+                case 1:
+                    JOptionPane.showMessageDialog(null, activeUser.toString());
+
+                    break;
+                case 2:
+
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+        } while (opcion != 5);
 
     }
 

@@ -29,13 +29,17 @@ public class Crud {
 
     }
 
+    //Logica - Medico
+    
+    
     //Crear medico
-    public static void agregarMedico(String nombre, String apellidos, String especialidad, String usuario, String password) {
+    public static void agregarMedico(String nombre, String apellidos, String especialidad, boolean administrador, String usuario, String password) {
 
         Medico newMedico = new Medico();
         newMedico.setNombre(nombre);
         newMedico.setApellidos(apellidos);
         newMedico.setEspecialidad(especialidad);
+        newMedico.setAdministrador(administrador);
         newMedico.setUsuario(usuario);
         newMedico.setPassword(password);
         newMedico.setId(contadorIds);
@@ -43,6 +47,11 @@ public class Crud {
 
     }
 
+    
+    // Logica - Pacientes
+    
+    
+    
 //Metodo para verificar la existencia de un paciente basado en su numero de cedula
     public static Paciente verificarExistencia(int Cedula) {
 
