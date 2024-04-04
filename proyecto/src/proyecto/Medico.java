@@ -1,27 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package proyecto;
 
 
 public class Medico {
     
-    int id;
-    String nombre;
-    String apellidos;
-    String especialidad;
-    String usuario;
-    String password;
-    boolean administrador;
+    private int id;
+    private String nombre;
+    private String apellidos;
+    private String especialidad;
+    private String usuario;
+    private String password;
+    private boolean administrador;
    
     
 
     public Medico() {
     }
 
-    public Medico(int Cedula, String nombre, String apellidos, String especialidad, boolean administrador, String usuario, String password) {
-        this.id = Cedula;
+    public Medico(int id, String nombre, String apellidos, String especialidad, boolean administrador, String usuario, String password) {
+        this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.especialidad = especialidad;

@@ -7,12 +7,25 @@ import javax.swing.JOptionPane;
 public class Hospital {
 
     public static void main(String[] args) {
+
+      
+        for (int i = 0; i < 3 ; i++) {
+            
         String user = JOptionPane.showInputDialog("Ingrese el nombre de usuario");
         String password = JOptionPane.showInputDialog("Ingrese la contraseña");
-        Login.iniciarSesion(user, password);
+        boolean autenticado = Login.iniciarSesion(user, password);
+        
+        if (autenticado) {
+            menu();
+            
+        } else 
 
+            JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
+            
+        
+        }
     }
-
+ 
     //Metodo para mostrar el menu
     public static void menu() {
         int opcionMenu1;
@@ -30,16 +43,48 @@ public class Hospital {
 
             switch (opcionMenu1) {
                 case 1:
-                    Crud.crearPaciente(Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente:")));
+                    int cedula = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente:"));
+                    String nombre = JOptionPane.showInputDialog("Ingrese el nombre del paciente");
+                    String apellidos = JOptionPane.showInputDialog("Ingrese los apellidos del paciente");
+                    int edad = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la edad del paciente"));
+                    char sexo = JOptionPane.showInputDialog("Ingrese el sexo del paciente en \n"
+                            + "'M' para masciluno \n"
+                            + "'F' para femenino").toUpperCase().charAt(0);
+                    Crud.crearPaciente(cedula, nombre, apellidos, edad, sexo);
                     break;
                 case 2:
-                    Crud.actualizarPaciente(Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente:")));
+                    int cedula2 = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente"));
+                    if (Crud.verificarExistencia(cedula2) != null) {
+                        int opcion = Integer.parseInt(JOptionPane.showInputDialog("Paciente encontrado, que desea hacer:\n"
+                                + "1. Actualizar todos los datos\n"
+                                + "2. Actualizar solo el historial"));
+                        if (opcion == 1) {
+                            String nombreActualizar = JOptionPane.showInputDialog("Ingrese el nuevo nombre:");
+                            String apellidosActualizar = JOptionPane.showInputDialog("Ingrese los nuevos apellidos");
+                            char sexoActualizar = JOptionPane.showInputDialog("Ingrese el sexo del paciente\n"
+                                    + "M para masculino\n"
+                                    + "F para femenino:").toUpperCase().charAt(0);
+                            int edadActualizar = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la edad del paciente:"));
+                            Crud.menuActualizar(cedula2, opcion, nombreActualizar, apellidosActualizar, edadActualizar, sexoActualizar);
+                        }
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No se encontro ningun paciente con ese numero de cedula", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                     break;
                 case 3:
                     Crud.eliminarPaciente(Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula de el paciente:")));
                     break;
                 case 4:
-                    Crud.consultarRegistro(Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente a consultar:")));
+                    int cedula3 = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente a consultar:"));
+                    Paciente pacienteConsultado = Crud.consultarRegistro(cedula3);
+                    if (pacienteConsultado != null) {
+                        JOptionPane.showMessageDialog(null, "Nombre: " + pacienteConsultado.getNombre() + "\n"
+                                + "Apellidos: " + pacienteConsultado.getApellidos() + "\n"
+                                + "Sexo: " + pacienteConsultado.getSexo() + "\n"
+                                + "Edad: " + pacienteConsultado.getEdad());
+
+                    }
                     break;
                 case 5:
                     break;
@@ -54,13 +99,4 @@ public class Hospital {
 
     }
 
-
-
-    
-    }
-    
-    
-    
-
-
-
+}

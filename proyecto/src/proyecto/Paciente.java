@@ -2,20 +2,18 @@
 package proyecto;
 
 public class Paciente {
-    String nombre;
-    String apellidos;
-    String causa;
-    char sexo;
-    int edad;
-    int cedula;
+    private String nombre;
+    private String apellidos;
+    private char sexo;
+    private int edad;
+    private int cedula;
     
     public Paciente() {
     }
     
-    public Paciente(String nombre, String apellidos, String causa, char sexo, int edad, int cedula){
+    public Paciente(String nombre, String apellidos, char sexo, int edad, int cedula){
         this.nombre = nombre;
         this.apellidos = apellidos;
-        this.causa = causa;
         this.sexo = sexo;
         this.edad = edad;
         this.cedula = cedula;
@@ -36,15 +34,6 @@ public class Paciente {
     public void setApellidos(String apellidos) {
         this.apellidos = apellidos;
     }
-
-    public String getCausa() {
-        return causa;
-    }
-
-    public void setCausa(String causa) {
-        this.causa = causa;
-    }
-
     public char getSexo() {
         return sexo;
     }

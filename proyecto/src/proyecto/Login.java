@@ -4,28 +4,21 @@ import java.util.ArrayList;
 
 public class Login {
 
+    public static boolean iniciarSesion(String user, String password) {
 
-    public static void iniciarSesion(String user, String password) {
-        boolean autenticado = false;
-        int intentos = 0;
-        
         Medico newMedico = new Medico();
-        newMedico.usuario = "admin";
-        newMedico.password = "admin";
+        newMedico.setUsuario("admin");
+        newMedico.setPassword("admin");
         Crud.usuarioDefault(newMedico);
-        
-        while (intentos < 3 && !autenticado) {
+
 
             for (Medico medico : Crud.getListaMedicos()) {
                 if (medico.getUsuario().equals(user) && medico.getPassword().equals(password)) {
-                    autenticado = true;
-                    Hospital.menu();
+                    return true;
                 }
+
             }
-            if (!autenticado) {
-                intentos++;
-            }
-        }
+        return false;
 
     }
 
