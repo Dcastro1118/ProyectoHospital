@@ -1,20 +1,21 @@
 
 package proyecto;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Historial {
 
-    private String codigo;
-    private String fecha;
+    private int codigo;
+    private LocalDate fecha;
     private int cedulaPaciente;
     private int idMedico;
     private String observaciones;
-       
+    
     public Historial() {
     }
 
-    public Historial(String codigo, String fecha, int cedulaPaciente, int idMedico, String observaciones) {
+    public Historial(int codigo, LocalDate fecha, int cedulaPaciente, int idMedico, String observaciones) {
         this.codigo = codigo;
         this.fecha = fecha;
         this.cedulaPaciente = cedulaPaciente;
@@ -22,19 +23,19 @@ public class Historial {
         this.observaciones = observaciones;
     }
 
-    public String getCodigo() {
+    public int getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
+    public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
 
-    public String getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
@@ -54,15 +55,11 @@ public class Historial {
         this.idMedico = idMedico;
     }
 
-    public String getObservaciones() {
+    public String getEntrada() {
         return observaciones;
     }
 
-    public void setObservaciones(String observaciones) {
+    public void setEntrada(String observaciones) {
         this.observaciones = observaciones;
-    }
-    
-    
-    
-    
-}
+    }  
+}   

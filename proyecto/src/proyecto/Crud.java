@@ -1,37 +1,34 @@
 package proyecto;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
 public class Crud {
 
-    private static int contadorIds = 0;
+    ///// Declaracion y getters de listas/////
+    private static int contadorCodigos;
+    private static int contadorIds = 1;
     private static ArrayList<Paciente> listaPacientes = new ArrayList<>();
     private static ArrayList<Medico> listaMedicos = new ArrayList<>();
     private static ArrayList<Historial> listaHistoriales = new ArrayList<>();
 
-    // Agregar el primer usuario por default
+    public static ArrayList<Paciente> getListaPacientes() {
+        return listaPacientes;
+    }
+
+    public static ArrayList<Medico> getListaMedicos() {
+        return listaMedicos;
+    }
+
+    // Agregar el primer usuario por default //
     public static void usuarioDefault(Medico medico) {
 
         listaMedicos.add(medico);
     }
 
-    //obtener lista de pacientes
-    public static ArrayList<Paciente> getListaPacientes() {
-        return listaPacientes;
-
-    }
-
-    //obtener lista de medicos
-    public static ArrayList<Medico> getListaMedicos() {
-        return listaMedicos;
-
-    }
-
-    //Logica - Medico
-    
-    
+    ////////////////////////////Logica de medicos ////////////////////////////////
     //Crear medico
     public static void agregarMedico(String nombre, String apellidos, String especialidad, boolean administrador, String usuario, String password) {
 
@@ -44,29 +41,81 @@ public class Crud {
         newMedico.setPassword(password);
         newMedico.setId(contadorIds);
         contadorIds++;
+        listaMedicos.add(newMedico);
+    }
+
+    public static void actualizarDatosMedico(int id, String nombre, String apellidos, String especialidad) {
+
+        for (Medico medico : listaMedicos) {
+            if (medico.getId() == id) {
+                medico.setNombre(nombre);
+                medico.setApellidos(apellidos);
+                medico.setEspecialidad(especialidad);
+
+            }
+        }
 
     }
 
-    
-    // Logica - Pacientes
-    
-    
-    
-//Metodo para verificar la existencia de un paciente basado en su numero de cedula
-    public static Paciente verificarExistencia(int Cedula) {
+    public static void actualizarUserMedico(int id, String usuario) {
 
-        for (Paciente paciente : listaPacientes) {
-            if (paciente.getCedula() == Cedula) {
-                return paciente;
+        for (Medico medico : listaMedicos) {
+            if (medico.getId() == id) {
+                medico.setUsuario(usuario);
+            }
+        }
+
+    }
+
+    public static void actualizarPasswordMedico(int id, String password) {
+
+        for (Medico medico : listaMedicos) {
+            if (medico.getId() == id) {
+                medico.setUsuario(password);
+            }
+        }
+
+    }
+
+    public static void eliminarMedico(int id) {
+
+        List<Medico> medicosAEliminar = new ArrayList<>();
+        for (Medico medico : listaMedicos) {
+            if (medico.getId() == id) {
+                medicosAEliminar.add(medico); // Agrega el paciente a la lista temporal
+            }
+        }
+        listaMedicos.removeAll(medicosAEliminar); // Elimina todos los pacientes de la lista original
+
+    }
+
+    public static Medico consultarRegistroMedicoId(int id) {
+
+        for (Medico medico : listaMedicos) {
+
+            if (medico.getId() == id) {
+                return medico;
             }
         }
         return null;
     }
 
+    public static Medico consultarRegistroMedicoNombre(String nombre) {
+
+        for (Medico medico : listaMedicos) {
+
+            if (medico.getNombre() == nombre) {
+                return medico;
+            }
+        }
+        return null;
+    }
+
+    ////////////////////////////////Logica de pacientes/////////////////////////
 //metodo para crear paciente
     public static void crearPaciente(int Cedula, String nombre, String apellidos, int edad, char sexo) {
 
-        if (verificarExistencia(Cedula) == null) {
+        if (consultarRegistroPaciente(Cedula) == null) {
 
             Paciente nuevoPaciente = new Paciente(nombre, apellidos, sexo, edad, Cedula);
             listaPacientes.add(nuevoPaciente);
@@ -78,31 +127,18 @@ public class Crud {
     }
 
     //metodo para actualizar paciente Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente:"));
-    public static void menuActualizar(int cedula, int opcion, String nombre, String apellidos, int edad, char sexo) {
+    public static void actualizarDatosPaciente(int cedula, String nombre, String apellidos, int edad, char sexo) {
 
         for (Paciente paciente : listaPacientes) {
             if (paciente.getCedula() == cedula) {
-                switch (opcion) {
-                    case 1:
-                        actualizarDatosPaciente(paciente, nombre, apellidos, edad, sexo);
-                        break;
-                    case 2:
-                        //actualizarHistorialPaciente(paciente);
-                        break;
-                    default:
-                        throw new AssertionError("Ingrese una de las opciones validas!");
-                }
+                paciente.setNombre(nombre);
+                paciente.setApellidos(apellidos);
+                paciente.setEdad(edad);
+                paciente.setSexo(sexo);
 
             }
         }
 
-    }
-
-    public static void actualizarDatosPaciente(Paciente paciente, String nombre, String apellidos, int edad, char sexo) {
-        paciente.setNombre(nombre);
-        paciente.setApellidos(apellidos);
-        paciente.setEdad(edad);
-        paciente.setSexo(sexo);
     }
 
     public static void eliminarPaciente(int cedula) {
@@ -117,7 +153,7 @@ public class Crud {
 
     }
 
-    public static Paciente consultarRegistro(int cedula) {
+    public static Paciente consultarRegistroPaciente(int cedula) {
 
         for (Paciente paciente : listaPacientes) {
 
@@ -126,6 +162,34 @@ public class Crud {
             }
         }
         return null;
+    }
+
+    /////////////////////////Logica de historiales ////////////////////////////
+    public static List buscarHistorial(int cedula) {
+        List<Historial> historialesEncontrados = new ArrayList<>();
+        for (Historial historial : listaHistoriales) {
+            if (historial.getCedulaPaciente() == cedula) {
+                historialesEncontrados.add(historial);
+
+            }
+
+        }
+
+        return historialesEncontrados;
+
+    }
+
+    public static void agregarEntrada(int cedulaPaciente, int idMedico, LocalDate fecha, String entrada) {
+
+        Historial newEntrada = new Historial();
+        newEntrada.setCedulaPaciente(cedulaPaciente);
+        newEntrada.setIdMedico(idMedico);
+        newEntrada.setFecha(fecha);
+        newEntrada.setEntrada(entrada);
+        newEntrada.setCodigo(contadorCodigos);
+        contadorCodigos++;
+        listaHistoriales.add(newEntrada);
+
     }
 
 }
