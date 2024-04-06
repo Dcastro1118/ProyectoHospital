@@ -10,10 +10,8 @@ public class Medico {
     private String especialidad;
     private String usuario;
     private String password;
-    private boolean administrador;
-   
+    private boolean administrador;   
     
-
     public Medico() {
     }
 

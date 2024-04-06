@@ -16,7 +16,7 @@ public class Hospital {
         Medico newMedico = new Medico();
         newMedico.setUsuario("admin");
         newMedico.setPassword("admin");
-        newMedico.setAdministrador(false);
+        newMedico.setAdministrador(true);
         Crud.usuarioDefault(newMedico);
 
         for (int i = 0; i < 3; i++) {
