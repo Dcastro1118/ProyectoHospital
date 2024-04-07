@@ -191,7 +191,7 @@ public class Hospital {
                     int intentos5 = 0;
                     int cedula5 = 0;
                     do {
-                        cedula5 = ValidacionEntrada.validarEntero((JOptionPane.showInputDialog("Ingrese la edad correcta del paciente:")));
+                        cedula5 = ValidacionEntrada.validarEntero((JOptionPane.showInputDialog("Ingrese la cedula del paciente a consultar:")));
                         intentos5++;
                         if (cedula5 == 0) {
                             JOptionPane.showMessageDialog(null, "Ingrese la cedula en el formato correcto");
