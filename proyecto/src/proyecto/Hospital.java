@@ -17,6 +17,9 @@ public class Hospital {
         newMedico.setUsuario("admin");
         newMedico.setPassword("admin");
         newMedico.setAdministrador(true);
+        newMedico.setId(0);
+        newMedico.setNombre("Administrador");
+        newMedico.setApellidos("del Sistema");
         Crud.usuarioDefault(newMedico);
 
         for (int i = 0; i < 3; i++) {
@@ -39,34 +42,74 @@ public class Hospital {
 
     ////////////////////////////Menu Principal////////////////////////////////
     public static void menu() {
-        int opcionMenu1;
+        int opcionMenu;
         do {
-            opcionMenu1 = Integer.parseInt(JOptionPane.showInputDialog(
+            opcionMenu = Integer.parseInt(JOptionPane.showInputDialog(
                     "Elija el numero segun lo que desea hacer: \n"
                     + "1. Crear paciente\n"
                     + "2. Actualizar paciente\n"
                     + "3. Eliminar paciente\n"
                     + "4. Consultar registro\n"
                     + "5. Agregar entrada a paciente\n"
-                    + "6. Funciones administrativas\n"
-                    + "7. Salir\n"
+                    + "6. Consultar entradas por paciente\n"
+                    + "7. Funciones administrativas\n"
+                    + "8. Cerrar Sesion\n"
+                    + "9. Salir\n"
                     + "Que desea hacer?:"
             ));
 
-            switch (opcionMenu1) {
+            switch (opcionMenu) {
                 case 1:
-                    int cedula = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente:"));
+                    int cedula = 0;
+                    int intentos = 0;
+
+                    do {
+                        cedula = ValidacionEntrada.validarEntero((JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente:")));
+                        intentos++;
+                        if (cedula == 0) {
+                            JOptionPane.showMessageDialog(null, "Ingrese un formato válido (solo números)");
+                        }
+                    } while (cedula == 0 && intentos < 3);
+                    if (cedula == 0 && intentos == 3) {
+                        menu();
+                    }
                     String nombre = JOptionPane.showInputDialog("Ingrese el nombre del paciente");
                     String apellidos = JOptionPane.showInputDialog("Ingrese los apellidos del paciente");
-                    int edad = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la edad del paciente"));
+                    int edad = 0;
+                    intentos = 0;
+                    do {
+                        edad = ValidacionEntrada.validarEntero((JOptionPane.showInputDialog("Ingrese la edad del paciente:")));
+                        intentos++;
+                        if (edad == 0) {
+                            JOptionPane.showMessageDialog(null, "Ingrese un formato válido (solo números)");
+                        }
+                    } while (edad == 0 && intentos < 3);
+                    if (edad == 0 && intentos == 3) {
+                        menu();
+                    }
+
                     char sexo = JOptionPane.showInputDialog("Ingrese el sexo del paciente en \n"
                             + "'M' para masciluno \n"
                             + "'F' para femenino").toUpperCase().charAt(0);
                     Crud.crearPaciente(cedula, nombre, apellidos, edad, sexo);
+
                     break;
                 case 2:
-                    int intentos = 0;
-                    int cedula2 = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente"));
+
+                    int intentos2 = 0;
+                    int cedula2 = 0;
+
+                    do {
+                        cedula2 = ValidacionEntrada.validarEntero((JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente:")));
+                        intentos2++;
+                        if (cedula2 == 0) {
+                            JOptionPane.showMessageDialog(null, "Ingrese un formato válido (solo números)");
+                        }
+                    } while (cedula2 == 0 && intentos2 < 3);
+                    if (cedula2 == 0 && intentos2 == 3) {
+                        menu();
+                    }
+
                     if (Crud.consultarRegistroPaciente(cedula2) != null) {
                         JOptionPane.showMessageDialog(null, "Paciente encontrado");
                         String nombreActualizar = JOptionPane.showInputDialog("Ingrese el nuevo nombre:");
@@ -74,7 +117,18 @@ public class Hospital {
                         char sexoActualizar = JOptionPane.showInputDialog("Ingrese el sexo del paciente\n"
                                 + "M para masculino\n"
                                 + "F para femenino:").toUpperCase().charAt(0);
-                        int edadActualizar = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la edad del paciente:"));
+
+                        intentos2 = 0;
+                        int edadActualizar = 0;
+
+                        do {
+                            edadActualizar = ValidacionEntrada.validarEntero((JOptionPane.showInputDialog("Ingrese la edad correcta del paciente:")));
+                            intentos2++;
+                        } while (edadActualizar == 0 && intentos2 < 3);
+                        if (edadActualizar == 0 && intentos2 == 3) {
+                            menu();
+                        }
+
                         Crud.actualizarDatosPaciente(cedula2, nombreActualizar, apellidosActualizar, edadActualizar, sexoActualizar);
                         JOptionPane.showMessageDialog(null, "El paciente ha sido actualizado!");
                     } else {
@@ -83,32 +137,104 @@ public class Hospital {
                     break;
 
                 case 3:
-                    Crud.eliminarPaciente(Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula de el paciente:")));
+                    int cedula3 = 0;
+                    int intentos3 = 0;
+                    Paciente paciente;
+                    do {
+                        cedula3 = ValidacionEntrada.validarEntero((JOptionPane.showInputDialog("Ingrese la cedula del paciente a eliminar:")));
+                        paciente = Crud.consultarRegistroPaciente(cedula3);
+                        intentos3++;
+                        if (paciente == null || cedula3 == 0) {
+                            JOptionPane.showMessageDialog(null, "No se encontro el paciente o el formato de cedula no es valido, favor corroborar la informacion");
+                            cedula3 = 0;
+                        }
+                    } while (cedula3 == 0 && intentos3 < 3);
+                    if (cedula3 == 0 && intentos3 == 3) {
+                        menu();
+                    }
+
+                    int confirmar = JOptionPane.showConfirmDialog(null, "El paciente a eliminar es: \n" + paciente.getNombre() + " " + paciente.getApellidos());
+                    if (confirmar == JOptionPane.YES_OPTION) {
+                        Crud.eliminarPaciente(cedula3);
+                    } else {
+                        break;
+                    }
                     break;
                 case 4:
-                    int cedula3 = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente a consultar:"));
-                    Paciente pacienteConsultado = Crud.consultarRegistroPaciente(cedula3);
-                    List historiales = Crud.buscarHistorial(cedula3);
+                    int cedula4 = 0;
+                    int intentos4 = 0;
+                    do {
+                        cedula4 = ValidacionEntrada.validarEntero((JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente:")));
+                        intentos4++;
+                        if (cedula4 == 0) {
+                            JOptionPane.showMessageDialog(null, "El formato de la cedula no es valido");
+                        }
+
+                    } while (cedula4 == 0 && intentos4 < 3);
+                    if (cedula4 == 0 && intentos4 == 3) {
+                        menu();
+                    }
+                    //int cedula4 = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente a consultar:"));
+                    Paciente pacienteConsultado = Crud.consultarRegistroPaciente(cedula4);
+                    List historiales = Crud.buscarHistorial(cedula4);
                     if (pacienteConsultado != null) {
                         JOptionPane.showMessageDialog(null, "Nombre: " + pacienteConsultado.getNombre() + "\n"
                                 + "Apellidos: " + pacienteConsultado.getApellidos() + "\n"
                                 + "Sexo: " + pacienteConsultado.getSexo() + "\n"
                                 + "Edad: " + pacienteConsultado.getEdad() + "\n"
                                 + "Cantidad de registros del paciente: " + historiales.size());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No se ha encontrado ningun paciente con ese numero de cedula");
                     }
                     break;
                 case 5:
-                    int cedula4 = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente a consultar:"));
-                    if (Crud.consultarRegistroPaciente(cedula4) == null) {
+                    int intentos5 = 0;
+                    int cedula5 = 0;
+                    do {
+                        cedula5 = ValidacionEntrada.validarEntero((JOptionPane.showInputDialog("Ingrese la edad correcta del paciente:")));
+                        intentos5++;
+                        if (cedula5 == 0) {
+                            JOptionPane.showMessageDialog(null, "Ingrese la cedula en el formato correcto");
+                        }
+                    } while (cedula5 == 0 && intentos5 < 3);
+                    if (cedula5 == 0 && intentos5 == 3) {
+                        menu();
+                    }
+
+                    Paciente paciente2 = Crud.consultarRegistroPaciente(cedula5);
+                    int confirmacion;
+                    if (paciente2 == null) {
                         JOptionPane.showMessageDialog(null, "No existe ningun paciente con ese numero de Cedula\n "
                                 + "favor crear primero el paciente o revisar que este digitado correctamente");
+                    } else {
+                        confirmacion = JOptionPane.showConfirmDialog(null, "El paciente es: " + paciente2.getNombre() + " " + paciente2.getApellidos());
+                        if (confirmacion == JOptionPane.YES_OPTION) {
+                            int idMedico = activeUser.getId();
+                            LocalDate fecha = LocalDate.now();
+                            String entrada = JOptionPane.showInputDialog("Ingrese la entrada a el historial del paciente:");
+                            Crud.agregarEntrada(cedula5, idMedico, fecha, entrada);
+                        }
                     }
-                    int idMedico = activeUser.getId();
-                    LocalDate fecha = LocalDate.now();
-                    String entrada = JOptionPane.showInputDialog("Ingrese la entrada a el historial del paciente:");
-                    Crud.agregarEntrada(cedula4, idMedico, fecha, entrada);
                     break;
                 case 6:
+
+                    int cedula6 = 0;
+                    int intentos6 = 0;
+
+                    do {
+                        cedula6 = ValidacionEntrada.validarEntero((JOptionPane.showInputDialog("Ingrese la cedula del paciente a consultar:")));
+                        intentos6++;
+                        if (cedula6 == 0) {
+                            JOptionPane.showMessageDialog(null, "Ingrese la cedula en el formato correcto");
+                        }
+                    } while (cedula6 == 0 && intentos6 < 3);
+                    if (cedula6 == 0 && intentos6 == 3) {
+                        menu();
+                    }
+                    JOptionPane.showMessageDialog(null, Crud.obtenerEntradas(cedula6));
+
+                    break;
+                case 7:
                     if (activeUser.isAdministrador()) {
 
                         menuAdmin();
@@ -117,14 +243,23 @@ public class Hospital {
 
                     }
                     break;
-                case 7:
+                case 8:
 
-                   break;
+                    String user = JOptionPane.showInputDialog("Ingrese el usuario:");
+                    String password = JOptionPane.showInputDialog("Ingrese la contraseña:");
+                    Login.iniciarSesion(user, password);
+                    activeUser = Login.getActiveUser();
+                    menu();
+
+                    break;
+                case 9:
+                    System.exit(0);
+                    break;
                 default:
                     JOptionPane.showMessageDialog(null, "Opción no válida. Por favor, selecciona una opción válida.", "Error", JOptionPane.ERROR_MESSAGE);
 
             }
-        } while (opcionMenu1 != 7); // Salir del bucle cuando el usuario elija la opción "Salir"
+        } while (opcionMenu != 8); // Salir del bucle cuando el usuario elija la opción "Salir"
 
     }
 
@@ -265,6 +400,9 @@ public class Hospital {
                         medicoQuitarAdm.setAdministrador(false);
 
                     }
+                    break;
+                    case 8:
+                        menu();
                     break;
 
                 default:

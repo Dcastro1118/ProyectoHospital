@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 public class Crud {
 
     ///// Declaracion y getters de listas/////
-    private static int contadorCodigos;
+    private static int contadorCodigos = 1;
     private static int contadorIds = 1;
     private static ArrayList<Paciente> listaPacientes = new ArrayList<>();
     private static ArrayList<Medico> listaMedicos = new ArrayList<>();
@@ -189,7 +189,39 @@ public class Crud {
         newEntrada.setCodigo(contadorCodigos);
         contadorCodigos++;
         listaHistoriales.add(newEntrada);
-
     }
 
+    public static String obtenerEntradas(int cedula) {
+        
+        String error = "Ningun registro fue encontrado con ese numero de cedula";
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Historial historial : listaHistoriales) {
+            Medico medicoEntrada = null;
+            Paciente pacienteConsultado = null;
+            if (historial.getCedulaPaciente() == cedula) {
+
+                for (Medico medico : listaMedicos) {
+                    if (medico.getId() == historial.getIdMedico()) {
+                        medicoEntrada = medico;
+                        for (Paciente paciente : listaPacientes) {
+                            if (paciente.getCedula() == cedula) {
+                                pacienteConsultado = paciente;
+
+                            }
+
+                        }
+                    }
+                }
+            }
+            stringBuilder.append("Fecha: ").append(historial.getFecha()
+            ).append("\nPaciente: ").append(pacienteConsultado.getNombre()).append(
+                    " ").append(pacienteConsultado.getApellidos()).append("\nMedico: "
+            ).append(medicoEntrada.getNombre()).append("\nEntrada: \n").append(historial.getEntrada()).append("\n");
+
+        }
+        if (stringBuilder.length() != 0) {
+        return stringBuilder.toString();
+        }
+        return error;
+    }
 }
