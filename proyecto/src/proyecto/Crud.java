@@ -100,24 +100,27 @@ public class Crud {
         return null;
     }
 
-    public static Medico consultarRegistroMedicoNombre(String nombre) {
+    public static ArrayList consultarRegistroMedicoNombre(String nombre) {
 
+        ArrayList<Medico> medicosCoincidencias = new ArrayList<>();
         for (Medico medico : listaMedicos) {
-
-            if (medico.getNombre() == nombre) {
-                return medico;
+            // Limpiar el nombre antes de comparar //
+            String nombreLimpiado = medico.getNombre().trim().toUpperCase(); // Elimina espacios en blanco al inicio y al final //
+            if (nombreLimpiado.equals(nombre.trim().toUpperCase())) { // Comparar después de limpiar //
+                medicosCoincidencias.add(medico);
             }
         }
-        return null;
+        return medicosCoincidencias;
+
     }
 
     ////////////////////////////////Logica de pacientes/////////////////////////
 //metodo para crear paciente
-    public static void crearPaciente(int Cedula, String nombre, String apellidos, int edad, char sexo) {
+    public static void crearPaciente(int cedula, String nombre, String apellidos, int edad, char sexo, String correo) {
 
-        if (consultarRegistroPaciente(Cedula) == null) {
+        if (consultarRegistroPaciente(cedula) == null) {
 
-            Paciente nuevoPaciente = new Paciente(nombre, apellidos, sexo, edad, Cedula);
+            Paciente nuevoPaciente = new Paciente(nombre, apellidos, sexo, edad, cedula, correo);
             listaPacientes.add(nuevoPaciente);
             JOptionPane.showMessageDialog(null, "El Paciente a sido creado con exito!");
         } else {
@@ -127,7 +130,7 @@ public class Crud {
     }
 
     //metodo para actualizar paciente Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente:"));
-    public static void actualizarDatosPaciente(int cedula, String nombre, String apellidos, int edad, char sexo) {
+    public static void actualizarDatosPaciente(int cedula, String nombre, String apellidos, int edad, char sexo, String correo) {
 
         for (Paciente paciente : listaPacientes) {
             if (paciente.getCedula() == cedula) {
@@ -135,6 +138,7 @@ public class Crud {
                 paciente.setApellidos(apellidos);
                 paciente.setEdad(edad);
                 paciente.setSexo(sexo);
+                paciente.setCorreo(correo);
 
             }
         }
@@ -192,7 +196,7 @@ public class Crud {
     }
 
     public static String obtenerEntradas(int cedula) {
-        
+
         String error = "Ningun registro fue encontrado con ese numero de cedula";
         StringBuilder stringBuilder = new StringBuilder();
         for (Historial historial : listaHistoriales) {
@@ -220,7 +224,7 @@ public class Crud {
 
         }
         if (stringBuilder.length() != 0) {
-        return stringBuilder.toString();
+            return stringBuilder.toString();
         }
         return error;
     }

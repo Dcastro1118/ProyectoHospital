@@ -7,16 +7,26 @@ public class Paciente {
     private char sexo;
     private int edad;
     private int cedula;
+    private String correo;
     
     public Paciente() {
     }
     
-    public Paciente(String nombre, String apellidos, char sexo, int edad, int cedula){
+    public Paciente(String nombre, String apellidos, char sexo, int edad, int cedula, String correo){
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.sexo = sexo;
         this.edad = edad;
         this.cedula = cedula;
+        this.correo = correo;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
     public String getNombre() {

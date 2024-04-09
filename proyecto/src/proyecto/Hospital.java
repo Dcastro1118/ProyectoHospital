@@ -64,11 +64,12 @@ public class Hospital {
                         int cedula = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el numero de cedula del paciente:"));
                         String nombre = JOptionPane.showInputDialog("Ingrese el nombre del paciente");
                         String apellidos = JOptionPane.showInputDialog("Ingrese los apellidos del paciente");
+                        String correo = JOptionPane.showInputDialog("Ingrese el correo del paciente");
                         int edad = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la edad del paciente:"));
                         char sexo = JOptionPane.showInputDialog("Ingrese el sexo del paciente en \n"
                                 + "'M' para masciluno \n"
                                 + "'F' para femenino").toUpperCase().charAt(0);
-                        Crud.crearPaciente(cedula, nombre, apellidos, edad, sexo);
+                        Crud.crearPaciente(cedula, nombre, apellidos, edad, sexo, correo);
 
                         break;
                     case 2:
@@ -79,11 +80,12 @@ public class Hospital {
                             JOptionPane.showMessageDialog(null, "Paciente encontrado: " + pacienteActualizar.getNombre() + " " + pacienteActualizar.getApellidos());
                             String nombreActualizar = JOptionPane.showInputDialog("Ingrese el nuevo nombre:");
                             String apellidosActualizar = JOptionPane.showInputDialog("Ingrese los nuevos apellidos");
+                            String correo2 = JOptionPane.showInputDialog("Ingrese el correo del paciente");
                             char sexoActualizar = JOptionPane.showInputDialog("Ingrese el sexo del paciente\n"
                                     + "M para masculino\n"
                                     + "F para femenino:").toUpperCase().charAt(0);
                             int edadActualizar = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la edad correcta del paciente:"));
-                            Crud.actualizarDatosPaciente(cedula2, nombreActualizar, apellidosActualizar, edadActualizar, sexoActualizar);
+                            Crud.actualizarDatosPaciente(cedula2, nombreActualizar, apellidosActualizar, edadActualizar, sexoActualizar, correo2);
                             JOptionPane.showMessageDialog(null, "El paciente ha sido actualizado!");
                         } else {
                             JOptionPane.showMessageDialog(null, "No se encontro ningun paciente con ese numero de cedula", "Error", JOptionPane.ERROR_MESSAGE);
@@ -115,6 +117,7 @@ public class Hospital {
                                     + "Apellidos: " + pacienteConsultado.getApellidos() + "\n"
                                     + "Sexo: " + pacienteConsultado.getSexo() + "\n"
                                     + "Edad: " + pacienteConsultado.getEdad() + "\n"
+                                    + "Correo: " + pacienteConsultado.getCorreo() + "\n"
                                     + "Cantidad de registros del paciente: " + historiales.size());
                         } else {
                             JOptionPane.showMessageDialog(null, "No se ha encontrado ningun paciente con ese numero de cedula");
@@ -139,7 +142,7 @@ public class Hospital {
                         break;
                     case 6:
 
-                        int cedula6 = ValidacionEntrada.validarEntero((JOptionPane.showInputDialog("Ingrese la cedula del paciente a consultar:")));
+                        int cedula6 = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la cedula del paciente a consultar:"));
                         JOptionPane.showMessageDialog(null, Crud.obtenerEntradas(cedula6));
 
                         break;
@@ -284,25 +287,17 @@ public class Hospital {
                     }
                     break;
                 case 5:
+                    int contador = 0;
                     String nombreConsulta = JOptionPane.showInputDialog("Ingrese el Nombre del medico a consultar:");
-                    Medico medicoConsultadoNombre = Crud.consultarRegistroMedicoNombre(nombreConsulta);
-                    if (medicoConsultadoNombre != null && medicoConsultadoNombre.isAdministrador() == true) {
-                        JOptionPane.showMessageDialog(null, "El medico es un administrador.\n"
-                                + "Nombre: " + medicoConsultadoNombre.getNombre() + "\n"
-                                + "Apellidos: " + medicoConsultadoNombre.getApellidos() + "\n"
-                                + "Especialidad: " + medicoConsultadoNombre.getEspecialidad() + "\n"
-                                + "ID:" + medicoConsultadoNombre.getId());
-                    } else if (medicoConsultadoNombre != null && medicoConsultadoNombre.isAdministrador() == false) {
-                        JOptionPane.showMessageDialog(null, "El medico no es un administrador.\n"
-                                + "Nombre: " + medicoConsultadoNombre.getNombre() + "\n"
-                                + "Apellidos: " + medicoConsultadoNombre.getApellidos() + "\n"
-                                + "Especialidad: " + medicoConsultadoNombre.getEspecialidad() + "\n"
-                                + "ID:" + medicoConsultadoNombre.getId());
-
-                    } else {
-                        JOptionPane.showMessageDialog(null, "El nombre no coincide con ningun medico");
-
+                    ArrayList<Medico> coincidencias = Crud.consultarRegistroMedicoNombre(nombreConsulta);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (Medico coincidencia : coincidencias) {
+                        stringBuilder.append("\n\nMedico ").append(contador).append(": ").append(coincidencia.getNombre()).append(" "
+                        ).append(coincidencia.getApellidos()).append("\nEspecialidad: ").append(coincidencia.getEspecialidad()
+                        ).append("\nID: ").append(coincidencia.getId());
+                        contador++;
                     }
+                    JOptionPane.showMessageDialog(null, "Coincidencias: " + stringBuilder.toString());
                     break;
                 case 6:
                     int idNuevoAdm = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el ID del medico al que desea dar permisos administrativos:"));
