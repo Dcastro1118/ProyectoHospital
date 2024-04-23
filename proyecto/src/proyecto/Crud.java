@@ -14,6 +14,8 @@ public class Crud {
     private static ArrayList<Medico> listaMedicos = new ArrayList<>();
     private static ArrayList<Historial> listaHistoriales = new ArrayList<>();
 
+    
+
     public static ArrayList<Paciente> getListaPacientes() {
         return listaPacientes;
     }
@@ -113,8 +115,13 @@ public class Crud {
         return medicosCoincidencias;
 
     }
+    
+    
 
     ////////////////////////////////Logica de pacientes/////////////////////////
+    
+    
+    
 //metodo para crear paciente
     public static void crearPaciente(int cedula, String nombre, String apellidos, int edad, char sexo, String correo) {
 
@@ -168,6 +175,7 @@ public class Crud {
         return null;
     }
 
+    
     /////////////////////////Logica de historiales ////////////////////////////
     public static List buscarHistorial(int cedula) {
         List<Historial> historialesEncontrados = new ArrayList<>();
@@ -220,12 +228,54 @@ public class Crud {
             stringBuilder.append("Fecha: ").append(historial.getFecha()
             ).append("\nPaciente: ").append(pacienteConsultado.getNombre()).append(
                     " ").append(pacienteConsultado.getApellidos()).append("\nMedico: "
-            ).append(medicoEntrada.getNombre()).append("\nEntrada: \n").append(historial.getEntrada()).append("\n");
+            ).append(medicoEntrada.getNombre()).append("\nCodigo: ").append(historial.getCodigo()).append("\nObservaciones: \n").append(historial.getEntrada()).append("\n\n");
 
         }
         if (stringBuilder.length() != 0) {
             return stringBuilder.toString();
         }
         return error;
+    }
+
+    public static void modificarEntrada(int codigo, String entrada) {
+
+        for (Historial historial : listaHistoriales) {
+            if (codigo == historial.getCodigo()) {
+                historial.setEntrada(entrada);
+
+            }
+        }
+
+    }
+
+    public static String devolverEntrada(int codigo) {
+
+        for (Historial historial : listaHistoriales) {
+            if (codigo == historial.getCodigo()) {
+                String entrada = historial.getEntrada();
+                return entrada;
+            }
+
+        }
+        return null;
+
+    }
+
+    public static void eliminarHistorial(int codigo) {
+
+        for (Historial historial : listaHistoriales) {
+            if (historial.getCodigo() == codigo) {
+                listaHistoriales.remove(historial);
+            }
+        }
+    }
+
+    public static Historial devolverHistorial(int codigo) {
+        for (Historial historial : listaHistoriales) {
+            if (historial.getCodigo() == codigo) {
+                return historial;
+            }
+        }
+        return null;
     }
 }
